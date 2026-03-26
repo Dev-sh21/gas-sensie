@@ -48,7 +48,7 @@ function App() {
   const audioRef = useRef(null);
   const [knobRotation, setKnobRotation] = useState(0);
 
-  // High-intensity alarm sound
+
   useEffect(() => {
     if (ppm > 400 && !isMuted && isArmed) {
       if (audioRef.current) {
@@ -88,7 +88,7 @@ function App() {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
-    const normalizedAngle = (angle + 450) % 360; // 0 is top
+    const normalizedAngle = (angle + 450) % 360;
     
     if (normalizedAngle <= 270) {
       const level = Math.round((normalizedAngle / 270) * 100);
@@ -106,10 +106,10 @@ function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-4 lg:p-8 flex flex-col lg:flex-row gap-8 items-start justify-center font-sans overflow-x-hidden">
       
-      {/* Audio Element for Alarm */}
+
       <audio ref={audioRef} src="https://www.soundjay.com/buttons/beep-01a.mp3" loop />
 
-      {/* Pop-up Notifications (Toasts) */}
+
       <div className="toast-container">
         <AnimatePresence>
           {notifications.filter(n => n.type === 'danger' || n.type === 'warning').slice(0, 1).map((notif) => (
@@ -143,12 +143,12 @@ function App() {
         </AnimatePresence>
       </div>
 
-      {/* Mobile App View (Phone Interface) */}
+
       <section className="w-full lg:w-[380px] shrink-0 lg:sticky lg:top-8 order-1 lg:order-1">
         <div className="relative mx-auto w-full aspect-[9/19] bg-neutral-900 rounded-[3.5rem] p-3 border-[10px] border-neutral-800 phone-shadow overflow-hidden">
           <div className="w-full h-full bg-white rounded-[2.8rem] overflow-hidden flex flex-col text-black">
             
-            {/* Status Bar */}
+
             <div className="px-8 pt-6 pb-2 flex justify-between items-center text-black/40">
               <span className="text-[10px] font-black tracking-widest uppercase">Live Signal</span>
               <div className="flex gap-2 items-center">
@@ -157,7 +157,7 @@ function App() {
               </div>
             </div>
 
-            {/* App Header */}
+
             <header className="px-8 py-6">
               <div className="flex justify-between items-center">
                 <div>
@@ -173,10 +173,10 @@ function App() {
               </div>
             </header>
 
-            {/* Scrollable Content */}
+
             <div className="flex-1 overflow-y-auto px-6 space-y-6 pb-12 no-scrollbar">
               
-              {/* Prediction Card */}
+
               <div className={`p-6 rounded-[2.5rem] text-white flex items-center justify-between relative overflow-hidden group transition-all ${isLearning ? 'bg-neutral-900' : 'bg-indigo-600'}`}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[40px]" />
                 <div className="flex items-center gap-4">
@@ -196,7 +196,7 @@ function App() {
                 {!isLearning && <ChevronRight size={20} className="opacity-40" />}
               </div>
 
-              {/* Main Gauge */}
+
               <div className="bg-neutral-50 p-8 rounded-[3rem] border border-neutral-100 flex flex-col items-center relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 blur-[40px]" />
                 <div className="relative w-44 h-44 flex items-center justify-center">
@@ -217,7 +217,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Usage History Chart */}
+
               <div className="bg-black p-6 rounded-[2.5rem] text-white space-y-4">
                  <div className="flex justify-between items-center">
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-white/40">Real-time Usage</h4>
@@ -232,7 +232,7 @@ function App() {
                  </div>
               </div>
 
-              {/* Action Card (Refill) */}
+
               <div 
                 onClick={() => gasPercentage <= 10 && window.open("https://www.hindustanpetroleum.com/pages/hp-gas-refill-booking-options", "_blank")}
                 className={`p-7 rounded-[2.5rem] relative overflow-hidden group cursor-pointer transition-all ${gasPercentage <= 10 ? 'bg-red-500 text-white animate-pulse' : 'bg-neutral-900 text-white'}`}
@@ -252,7 +252,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Activity Log */}
+
               <div className="space-y-4">
                 <h4 className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] px-2">Activity Feed</h4>
                 <div className="space-y-3">
@@ -291,12 +291,12 @@ function App() {
               </div>
             </div>
           </div>
-          {/* Phone Speaker/Notch */}
+
           <div className="absolute top-8 left-1/2 -translate-x-1/2 w-20 h-5 bg-neutral-800 rounded-2xl z-20" />
         </div>
       </section>
 
-      {/* Simulation Workbench */}
+
       <section className="flex-1 w-full max-w-4xl space-y-6 order-2 lg:order-2">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-black flex items-center gap-3 tracking-tight">
@@ -319,7 +319,7 @@ function App() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Hardware Twin Panel */}
+
           <div className="glass p-8 rounded-[2.5rem] space-y-8 border border-white/5 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[100px] pointer-events-none" />
             <h2 className="text-xs font-black text-neutral-500 uppercase tracking-[0.2em]">Hardware Digital Twin</h2>
@@ -351,7 +351,7 @@ function App() {
             </div>
           </div>
 
-          {/* Controls Panel */}
+
           <div className="glass p-8 rounded-[2.5rem] space-y-8 border border-white/5">
             <h2 className="text-xs font-black text-neutral-500 uppercase tracking-[0.2em]">Controls</h2>
             <div className="space-y-12">
@@ -389,7 +389,7 @@ function App() {
           </div>
         </div>
 
-        {/* Analytics Panel */}
+
         <div className="glass p-8 rounded-[2.5rem] border border-white/5 h-[320px]">
            <div className="flex justify-between items-center mb-6">
               <h2 className="text-xs font-black text-neutral-500 uppercase tracking-[0.2em]">Gas Presence Analytics</h2>

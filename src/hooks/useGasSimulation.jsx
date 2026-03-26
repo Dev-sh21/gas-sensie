@@ -1,26 +1,26 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const FULL_WEIGHT = 14.2; // Usable gas in kg
-const EMPTY_WEIGHT = 15.8; // Tare weight in kg
+const FULL_WEIGHT = 14.2; 
+const EMPTY_WEIGHT = 15.8; 
 const TOTAL_FULL = FULL_WEIGHT + EMPTY_WEIGHT;
 
 export function useGasSimulation() {
   const [weight, setWeight] = useState(TOTAL_FULL);
   const [ppm, setPpm] = useState(120);
-  const [flameLevel, setFlameLevel] = useState(0); // 0-100%
+  const [flameLevel, setFlameLevel] = useState(0); 
   const [isLeaking, setIsLeaking] = useState(false);
   const [valveOpen, setValveOpen] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [hasAlertedLowGas, setHasAlertedLowGas] = useState(false);
   const [history, setHistory] = useState([]);
 
-  // Learning States
+
   const [usageIntensitySum, setUsageIntensitySum] = useState(0);
   const [totalUsageTicks, setTotalUsageTicks] = useState(0);
 
   const isBurnerOn = flameLevel > 0;
 
-  // Ultra-Fast Simulation
+
   useEffect(() => {
     let interval;
     if (valveOpen && (isBurnerOn || isLeaking)) {
@@ -31,7 +31,6 @@ export function useGasSimulation() {
           const consumption = isLeaking ? leakageConsumption : burnerConsumption;
           const nextWeight = Math.max(EMPTY_WEIGHT, prev - consumption);
           
-          // Learning logic: only track burner usage for estimation
           if (isBurnerOn && !isLeaking) {
             setUsageIntensitySum(sum => sum + burnerConsumption);
             setTotalUsageTicks(ticks => ticks + 1);
@@ -46,7 +45,6 @@ export function useGasSimulation() {
 
   const gasPercentage = Math.max(0, ((weight - EMPTY_WEIGHT) / FULL_WEIGHT) * 100);
 
-  // 10% Low Gas Alert
   useEffect(() => {
     if (gasPercentage <= 10 && !hasAlertedLowGas && gasPercentage > 0) {
       setHasAlertedLowGas(true);
@@ -56,7 +54,6 @@ export function useGasSimulation() {
     }
   }, [gasPercentage, hasAlertedLowGas]);
 
-  // History tracking for graph
   useEffect(() => {
     const interval = setInterval(() => {
       setHistory(prev => [...prev.slice(-19), { 
@@ -68,7 +65,6 @@ export function useGasSimulation() {
     return () => clearInterval(interval);
   }, [weight, gasPercentage]);
 
-  // Leak detection logic
   useEffect(() => {
     let interval;
     if (isLeaking) {
@@ -83,7 +79,6 @@ export function useGasSimulation() {
     return () => clearInterval(interval);
   }, [isLeaking]);
 
-  // Auto-cutoff on leak
   useEffect(() => {
     if (ppm > 400 && valveOpen) {
       setValveOpen(false);
@@ -127,22 +122,17 @@ export function useGasSimulation() {
     addNotification(`Valve manually ${!valveOpen ? 'Opened' : 'Closed'}.`, 'info');
   };
 
-  // Prediction Logic
+
   const usableGas = weight - EMPTY_WEIGHT;
   let estimateDays = 0;
   let isLearning = true;
 
-  // We need at least 50 ticks (5 seconds) of usage to provide a refined estimate
   if (totalUsageTicks > 50) {
     isLearning = false;
-    // Current simulated usage is 1s = 1hr. 
-    // Average consumption per simulated hour (1 second) = (usageIntensitySum / totalUsageTicks) * 10
     const avgConsumptionPerHour = (usageIntensitySum / totalUsageTicks) * 10;
-    // Assume 2 hours of usage per day typically
     const avgDailyConsumption = avgConsumptionPerHour * 2;
     estimateDays = Math.round(usableGas / Math.max(0.1, avgDailyConsumption));
   } else {
-    // Baseline if not enough data
     estimateDays = Math.round(usableGas / 0.4);
   }
 
